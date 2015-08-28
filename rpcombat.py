@@ -24,7 +24,95 @@ def roll(sides, dice = 1):
     for rolls in range(1, dice):
         result += random.randint(1, sides)
     return result
+
+def generate_rpc():
+    '''
+    Takes no arguments
+    Returns a new character profile dictionary
+    '''
+    print()
+    print('New Character')
+    print()
+    #Create empty profile dictionary
+    profile = {'Name':"", 'Desc':"", 'Gender':"", 'Race':"", 'Muscle':0, 
+               'Brainz':0, 'Speed':0, 'Charm':0, 'life':0, 'magic':0,
+               'prot':0, 'gold':0, 'inventory':[]}
+
+    # Prompt user for user-defined information (Name, Desc, Gender, Race)
+    name = input('What is your name? ')
+    desc = input('Describe yourself: ')
+    gender = input('What Gender are you? (male/female/unsure): ')
+    race = input('What Race are you? - (Pixie/Vulcan/Gelfling/Troll): ')
+    # Validate user input
+    profile['Name'] = name.capitalize()
+    profile['Desc'] = desc.capitalize()
+    gender = gender.lower()
+    if gender.startswith('f'):
+        profile['Gender'] = 'female'
+    elif gender.startswith('m'):
+        profile['Gender'] = 'male'
+    else:
+        profile['Gender'] = 'neuter'
+        race = race.capitalize()
+    if race.startswith('P'):
+        profile['Race'] = 'Pixie'
+    elif race.startswith('V'):
+        profile['Race'] = 'Vulcan'
+    elif race.startswith('G'):
+        profile['Race'] = 'Gelfling'
+    elif race.startswith('T'):
+        profile['Race'] = 'Troll'
+    else:
+        profile['Race'] = 'Goblin'
+
+    # Generate stats ('Muscle', 'Brainz', 'Speed', 'Charm')
+    profile['Muscle'] = roll(3,33)
+    profile['Brainz'] = roll(3,33)
+    profile['Speed'] = roll(3,33)
+    profile['Charm'] = roll(3,33)
     
+    # Work out combat stats (life, magic, prot, gold)
+    life = (profile['Muscle'] + (profile['Speed']/2) + random.randint(9,49))/2
+    magic = (profile['Brainz'] + (profile['Charm']/2) + random.randint(9,49))/2
+    prot = (profile['Speed'] + (profile['Brainz']/2) + random.randint(9,49))/2
+    gold = random.randint(9,49) + random.randint(9,49) + random.randint(9,49)
+    
+    # Validate stats
+    if life > 0 and life < 100:
+        profile['life'] = life
+    else:
+        life = random.randint(9,99)
+
+    if magic > 0 and magic < 100:
+       profile['magic'] = magic
+    else:
+       magic = random.randint(9,99)
+    if prot > 0 and prot < 100:
+       profile['prot'] = prot
+    else:
+       prot = random.randint(9,99)
+    if gold > 0:
+       profile['gold'] = gold
+    else:
+       gold = random.randint(9,99)
+       
+    # Output the character sheet
+    fancy_line = "<~~==|#|==~~++**\@/**++~~==|#|==~~>"
+    print()
+    print(fancy_line)
+    print("\t", profile['Name'])
+    print("\t", profile['Race'], profile['Gender'])
+    print("\t", profile['Desc'])
+    print(fancy_line)
+    print()
+    print("\tMuscle: ", profile['Muscle'], "\tlife: ", profile['life'])
+    print("\tBrainz: ", profile['Brainz'], "\tmagic: ", profile['magic'])
+    print("\tSpeed: ", profile['Speed'], "\tprotection: ", profile['prot'])
+    print("\tCharm: ", profile['Charm'], "\tgold: ", profile['gold'])
+    print()
+
+    return profile
+
 # set up constant data.
 stock = {'shield':(15,20,50),
         'sword':(60,60,40),
@@ -59,81 +147,6 @@ max_players = 2
 players = []
 # Generate characters
 while len(players) < max_players:
-    print()
-    print("New Character")
-    print()
-    # Create empty profile dictionary
-    profile = {'Name':"", 'Desc':"", 'Gender':"", 'Race':"", 'Muscle':0,
-               'Brainz':0, 'Speed':0, 'Charm':0, 'life':0, 'magic':0,
-               'prot':0, 'gold':0, 'inventory':[]}
-    # Prompt user for user-defined information (Name, Desc, Gender, Race)
-    name = input('What is your name? ')
-    desc = input('Describe yourself: ')
-    gender = input('What Gender are you? (male/female/unsure): ')
-    race = input('What Race are you? - (Pixie/Vulcan/Gelfling/Troll): ')
-    # Validate user input
-    profile['Name'] = name.capitalize()
-    profile['Desc'] = desc.capitalize()
-    gender = gender.lower()
-    if gender.startswith('f'):
-        profile['Gender'] = 'female'
-    elif gender.startswith('m'):
-        profile['Gender'] = 'male'
-    else:
-        profile['Gender'] = 'neuter'
-        race = race.capitalize()
-    if race.startswith('P'):
-        profile['Race'] = 'Pixie'
-    elif race.startswith('V'):
-        profile['Race'] = 'Vulcan'
-    elif race.startswith('G'):
-        profile['Race'] = 'Gelfling'
-    elif race.startswith('T'):
-        profile['Race'] = 'Troll'
-    else:
-        profile['Race'] = 'Goblin'
-    # Generate stats ('Muscle', 'Brainz', 'Speed', 'Charm')
-    profile['Muscle'] = roll(3,33)
-    profile['Brainz'] = roll(3,33)
-    profile['Speed'] = roll(3,33)
-    profile['Charm'] = roll(3,33)
-    # Work out combat stats (life, magic, prot, gold)
-    life = (profile['Muscle'] + (profile['Speed']/2) + random.randint(9,49))/2
-    magic = (profile['Brainz'] + (profile['Charm']/2) + random.randint(9,49))/2
-    prot = (profile['Speed'] + (profile['Brainz']/2) + random.randint(9,49))/2
-    gold = random.randint(9,49) + random.randint(9,49) + random.randint(9,49)
-    # Validate stats
-    if life > 0 and life < 100:
-        profile['life'] = life
-    else:
-        life = random.randint(9,99)
-
-    if magic > 0 and magic < 100:
-       profile['magic'] = magic
-    else:
-       magic = random.randint(9,99)
-    if prot > 0 and prot < 100:
-       profile['prot'] = prot
-    else:
-       prot = random.randint(9,99)
-    if gold > 0:
-       profile['gold'] = gold
-    else:
-       gold = random.randint(9,99)
-    # Output the character sheet
-    fancy_line = "<~~==|#|==~~++**\@/**++~~==|#|==~~>"
-    print()
-    print(fancy_line)
-    print("\t", profile['Name'])
-    print("\t", profile['Race'], profile['Gender'])
-    print("\t", profile['Desc'])
-    print(fancy_line)
-    print()
-    print("\tMuscle: ", profile['Muscle'], "\tlife: ", profile['life'])
-    print("\tBrainz: ", profile['Brainz'], "\tmagic: ", profile['magic'])
-    print("\tSpeed: ", profile['Speed'], "\tprotection: ", profile['prot'])
-    print("\tCharm: ", profile['Charm'], "\tgold: ", profile['gold'])
-    print()
     # Prompt user to buy some equipment.
     purchase = input('Would you like to buy some equipment? ')
     while purchase != 'done':
