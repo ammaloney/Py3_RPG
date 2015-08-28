@@ -9,6 +9,22 @@ Created on Fri Aug 28 11:22:24 2015
 
 # Import modules
 import random
+
+def roll(sides, dice = 1):
+    '''Dice rolling function
+    
+    sides: Number of sides the die has
+    
+    dice: number of dice to be rolled (defaults to 1)
+    
+    returns a random between dice and dice * sides
+    weighted towards the average.
+    '''
+    result = 0
+    for rolls in range(1, dice):
+        result += random.randint(1, sides)
+    return result
+    
 # set up constant data.
 stock = {'shield':(15,20,50),
         'sword':(60,60,40),
@@ -77,14 +93,10 @@ while len(players) < max_players:
     else:
         profile['Race'] = 'Goblin'
     # Generate stats ('Muscle', 'Brainz', 'Speed', 'Charm')
-    profile['Muscle'] = random.randint(3,33) + random.randint(3,33) \
-                                           + random.randint(3,33)
-    profile['Brainz'] = random.randint(3,33) + random.randint(3,33) \
-                                           + random.randint(3,33)
-    profile['Speed'] = random.randint(3,33) + random.randint(3,33) \
-                                          + random.randint(3,33)
-    profile['Charm'] = random.randint(3,33) + random.randint(3,33) \
-                                          + random.randint(3,33)
+    profile['Muscle'] = roll(3,33)
+    profile['Brainz'] = roll(3,33)
+    profile['Speed'] = roll(3,33)
+    profile['Charm'] = roll(3,33)
     # Work out combat stats (life, magic, prot, gold)
     life = (profile['Muscle'] + (profile['Speed']/2) + random.randint(9,49))/2
     magic = (profile['Brainz'] + (profile['Charm']/2) + random.randint(9,49))/2
