@@ -147,6 +147,7 @@ max_players = 2
 players = []
 # Generate characters
 while len(players) < max_players:
+    profile = generate_rpc()
     # Prompt user to buy some equipment.
     purchase = input('Would you like to buy some equipment? ')
     while purchase != 'done':
